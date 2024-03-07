@@ -1,0 +1,429 @@
+[
+    {
+        "id": "6bf3ba72470dc9d7",
+        "type": "tab",
+        "label": "test influxdb",
+        "disabled": true,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "96e0f6289c5dfa20",
+        "type": "inject",
+        "z": "6bf3ba72470dc9d7",
+        "name": "fetch",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 170,
+        "y": 60,
+        "wires": [
+            [
+                "ce7762562777ca1d"
+            ]
+        ]
+    },
+    {
+        "id": "ce7762562777ca1d",
+        "type": "function",
+        "z": "6bf3ba72470dc9d7",
+        "name": "Query",
+        "func": "msg.query = `from(bucket: \"power\")\n  |> range(start: -1d)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"Threshold_table\")\n  |> filter(fn: (r) => r[\"_field\"] == \"Max\")`;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 60,
+        "wires": [
+            [
+                "458d44e65f403f73"
+            ]
+        ]
+    },
+    {
+        "id": "458d44e65f403f73",
+        "type": "influxdb in",
+        "z": "6bf3ba72470dc9d7",
+        "influxdb": "2c29904697c66a44",
+        "name": "read",
+        "query": "",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "tec forge",
+        "x": 530,
+        "y": 60,
+        "wires": [
+            [
+                "0c0f8cd933d62348"
+            ]
+        ]
+    },
+    {
+        "id": "0c0f8cd933d62348",
+        "type": "debug",
+        "z": "6bf3ba72470dc9d7",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 700,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "6ab97753f927a8a5",
+        "type": "inject",
+        "z": "6bf3ba72470dc9d7",
+        "name": "fetch",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 90,
+        "y": 220,
+        "wires": [
+            [
+                "17c9a66909475670"
+            ]
+        ]
+    },
+    {
+        "id": "17c9a66909475670",
+        "type": "function",
+        "z": "6bf3ba72470dc9d7",
+        "name": "Query_Max_Threshold",
+        "func": "msg.query = `from(bucket: \"power\")\n  |> range(start: -1d)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"Threshold_table\")\n  |> filter(fn: (r) => r[\"_field\"] == \"Max\")`;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 220,
+        "wires": [
+            [
+                "b4218e26b04fe19c"
+            ]
+        ]
+    },
+    {
+        "id": "b4218e26b04fe19c",
+        "type": "influxdb in",
+        "z": "6bf3ba72470dc9d7",
+        "influxdb": "2c29904697c66a44",
+        "name": "read",
+        "query": "",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "tec forge",
+        "x": 510,
+        "y": 220,
+        "wires": [
+            [
+                "59d4cff05c2f5d19"
+            ]
+        ]
+    },
+    {
+        "id": "488ed6271e69b83c",
+        "type": "debug",
+        "z": "6bf3ba72470dc9d7",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1040,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "59d4cff05c2f5d19",
+        "type": "change",
+        "z": "6bf3ba72470dc9d7",
+        "name": "get_Max_Threshold_value",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload[0]._value",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 760,
+        "y": 220,
+        "wires": [
+            [
+                "488ed6271e69b83c"
+            ]
+        ]
+    },
+    {
+        "id": "70f5ee1fbc74a52a",
+        "type": "inject",
+        "z": "6bf3ba72470dc9d7",
+        "name": "fetch",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 90,
+        "y": 360,
+        "wires": [
+            [
+                "fd589ecd8e4e65df"
+            ]
+        ]
+    },
+    {
+        "id": "fd589ecd8e4e65df",
+        "type": "function",
+        "z": "6bf3ba72470dc9d7",
+        "name": "Query_Min_Threshold",
+        "func": "msg.query = `from(bucket: \"power\")\n  |> range(start: -1d)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"Threshold_table\")\n  |> filter(fn: (r) => r[\"_field\"] == \"Min\")`;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 360,
+        "wires": [
+            [
+                "f0dfac652d2441f0"
+            ]
+        ]
+    },
+    {
+        "id": "f0dfac652d2441f0",
+        "type": "influxdb in",
+        "z": "6bf3ba72470dc9d7",
+        "influxdb": "2c29904697c66a44",
+        "name": "read",
+        "query": "",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "tec forge",
+        "x": 510,
+        "y": 360,
+        "wires": [
+            [
+                "4e3b1187f193dcb7"
+            ]
+        ]
+    },
+    {
+        "id": "43f3ae2aa1abfac8",
+        "type": "debug",
+        "z": "6bf3ba72470dc9d7",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1040,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "4e3b1187f193dcb7",
+        "type": "change",
+        "z": "6bf3ba72470dc9d7",
+        "name": "get_Min_Threshold_value",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload[0]._value",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 750,
+        "y": 360,
+        "wires": [
+            [
+                "43f3ae2aa1abfac8"
+            ]
+        ]
+    },
+    {
+        "id": "9e687b0504f7606b",
+        "type": "comment",
+        "z": "6bf3ba72470dc9d7",
+        "name": "Get Threshold \"Max\" value",
+        "info": "Get Threshold \"Max\" value from \"Threshold_table\" measurement",
+        "x": 130,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "c2d6bd0561447b49",
+        "type": "comment",
+        "z": "6bf3ba72470dc9d7",
+        "name": "Get Threshold \"Min\" value",
+        "info": "Get Threshold \"Min\" value from \"Threshold_table\" measurement",
+        "x": 130,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "52d6b079e12a459c",
+        "type": "inject",
+        "z": "6bf3ba72470dc9d7",
+        "name": "",
+        "props": [
+            {
+                "p": "value",
+                "v": "111*$random()",
+                "vt": "jsonata"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 90,
+        "y": 520,
+        "wires": [
+            [
+                "e549191af09dc00f"
+            ]
+        ]
+    },
+    {
+        "id": "184fcf68dcd4589a",
+        "type": "debug",
+        "z": "6bf3ba72470dc9d7",
+        "name": "debug 4",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 860,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "e549191af09dc00f",
+        "type": "change",
+        "z": "6bf3ba72470dc9d7",
+        "name": "get_Min_Threshold_value",
+        "rules": [
+            {
+                "t": "set",
+                "p": "fields.powerr_pass_threshold",
+                "pt": "msg",
+                "to": "value",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "fields",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 350,
+        "y": 520,
+        "wires": [
+            [
+                "184fcf68dcd4589a",
+                "f38b251dcfd7799c"
+            ]
+        ]
+    },
+    {
+        "id": "5ac6f38eeafec3a4",
+        "type": "comment",
+        "z": "6bf3ba72470dc9d7",
+        "name": "write to influxdb",
+        "info": "",
+        "x": 100,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "f38b251dcfd7799c",
+        "type": "influxdb out",
+        "z": "6bf3ba72470dc9d7",
+        "influxdb": "2c29904697c66a44",
+        "name": "",
+        "measurement": "Alarms_table",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "tec forge",
+        "bucket": "power",
+        "x": 920,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "2c29904697c66a44",
+        "type": "influxdb",
+        "hostname": "influxdb",
+        "port": "8086",
+        "protocol": "http",
+        "database": "database",
+        "name": "influxdb",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "2.0",
+        "url": "http://influxdb:8086",
+        "timeout": "10",
+        "rejectUnauthorized": true
+    }
+]

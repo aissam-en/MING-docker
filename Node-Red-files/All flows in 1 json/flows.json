@@ -1,0 +1,886 @@
+[
+    {
+        "id": "6bf3ba72470dc9d7",
+        "type": "tab",
+        "label": "test influxdb",
+        "disabled": true,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "f6f2187d.f17ca8",
+        "type": "tab",
+        "label": "mqtt + influxdb",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "cbd00f9f469eafaf",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "e389ad1e7366b28c",
+        "type": "mqtt-broker",
+        "name": "mqtt_brocker",
+        "broker": "emqx",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "2c29904697c66a44",
+        "type": "influxdb",
+        "hostname": "influxdb",
+        "port": "8086",
+        "protocol": "http",
+        "database": "database",
+        "name": "influxdb",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "2.0",
+        "url": "http://influxdb:8086",
+        "timeout": "10",
+        "rejectUnauthorized": true
+    },
+    {
+        "id": "c2058fcbe02c16a6",
+        "type": "prometheus-metric-config",
+        "name": "",
+        "help": "",
+        "labels": "",
+        "mtype": "counter"
+    },
+    {
+        "id": "96e0f6289c5dfa20",
+        "type": "inject",
+        "z": "6bf3ba72470dc9d7",
+        "name": "fetch",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 170,
+        "y": 60,
+        "wires": [
+            [
+                "ce7762562777ca1d"
+            ]
+        ]
+    },
+    {
+        "id": "ce7762562777ca1d",
+        "type": "function",
+        "z": "6bf3ba72470dc9d7",
+        "name": "Query",
+        "func": "msg.query = `from(bucket: \"power\")\n  |> range(start: -1d)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"Threshold_table\")\n  |> filter(fn: (r) => r[\"_field\"] == \"Max\")`;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 60,
+        "wires": [
+            [
+                "458d44e65f403f73"
+            ]
+        ]
+    },
+    {
+        "id": "458d44e65f403f73",
+        "type": "influxdb in",
+        "z": "6bf3ba72470dc9d7",
+        "influxdb": "2c29904697c66a44",
+        "name": "read",
+        "query": "",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "tec forge",
+        "x": 530,
+        "y": 60,
+        "wires": [
+            [
+                "0c0f8cd933d62348"
+            ]
+        ]
+    },
+    {
+        "id": "0c0f8cd933d62348",
+        "type": "debug",
+        "z": "6bf3ba72470dc9d7",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 700,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "6ab97753f927a8a5",
+        "type": "inject",
+        "z": "6bf3ba72470dc9d7",
+        "name": "fetch",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 90,
+        "y": 220,
+        "wires": [
+            [
+                "17c9a66909475670"
+            ]
+        ]
+    },
+    {
+        "id": "17c9a66909475670",
+        "type": "function",
+        "z": "6bf3ba72470dc9d7",
+        "name": "Query_Max_Threshold",
+        "func": "msg.query = `from(bucket: \"power\")\n  |> range(start: -1d)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"Threshold_table\")\n  |> filter(fn: (r) => r[\"_field\"] == \"Max\")`;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 220,
+        "wires": [
+            [
+                "b4218e26b04fe19c"
+            ]
+        ]
+    },
+    {
+        "id": "b4218e26b04fe19c",
+        "type": "influxdb in",
+        "z": "6bf3ba72470dc9d7",
+        "influxdb": "2c29904697c66a44",
+        "name": "read",
+        "query": "",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "tec forge",
+        "x": 510,
+        "y": 220,
+        "wires": [
+            [
+                "59d4cff05c2f5d19"
+            ]
+        ]
+    },
+    {
+        "id": "488ed6271e69b83c",
+        "type": "debug",
+        "z": "6bf3ba72470dc9d7",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1040,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "59d4cff05c2f5d19",
+        "type": "change",
+        "z": "6bf3ba72470dc9d7",
+        "name": "get_Max_Threshold_value",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload[0]._value",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 760,
+        "y": 220,
+        "wires": [
+            [
+                "488ed6271e69b83c"
+            ]
+        ]
+    },
+    {
+        "id": "70f5ee1fbc74a52a",
+        "type": "inject",
+        "z": "6bf3ba72470dc9d7",
+        "name": "fetch",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 90,
+        "y": 360,
+        "wires": [
+            [
+                "fd589ecd8e4e65df"
+            ]
+        ]
+    },
+    {
+        "id": "fd589ecd8e4e65df",
+        "type": "function",
+        "z": "6bf3ba72470dc9d7",
+        "name": "Query_Min_Threshold",
+        "func": "msg.query = `from(bucket: \"power\")\n  |> range(start: -1d)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"Threshold_table\")\n  |> filter(fn: (r) => r[\"_field\"] == \"Min\")`;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 360,
+        "wires": [
+            [
+                "f0dfac652d2441f0"
+            ]
+        ]
+    },
+    {
+        "id": "f0dfac652d2441f0",
+        "type": "influxdb in",
+        "z": "6bf3ba72470dc9d7",
+        "influxdb": "2c29904697c66a44",
+        "name": "read",
+        "query": "",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "tec forge",
+        "x": 510,
+        "y": 360,
+        "wires": [
+            [
+                "4e3b1187f193dcb7"
+            ]
+        ]
+    },
+    {
+        "id": "43f3ae2aa1abfac8",
+        "type": "debug",
+        "z": "6bf3ba72470dc9d7",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1040,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "4e3b1187f193dcb7",
+        "type": "change",
+        "z": "6bf3ba72470dc9d7",
+        "name": "get_Min_Threshold_value",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload[0]._value",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 750,
+        "y": 360,
+        "wires": [
+            [
+                "43f3ae2aa1abfac8"
+            ]
+        ]
+    },
+    {
+        "id": "9e687b0504f7606b",
+        "type": "comment",
+        "z": "6bf3ba72470dc9d7",
+        "name": "Get Threshold \"Max\" value",
+        "info": "Get Threshold \"Max\" value from \"Threshold_table\" measurement",
+        "x": 130,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "c2d6bd0561447b49",
+        "type": "comment",
+        "z": "6bf3ba72470dc9d7",
+        "name": "Get Threshold \"Min\" value",
+        "info": "Get Threshold \"Min\" value from \"Threshold_table\" measurement",
+        "x": 130,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "52d6b079e12a459c",
+        "type": "inject",
+        "z": "6bf3ba72470dc9d7",
+        "name": "",
+        "props": [
+            {
+                "p": "value",
+                "v": "111*$random()",
+                "vt": "jsonata"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 90,
+        "y": 520,
+        "wires": [
+            [
+                "e549191af09dc00f"
+            ]
+        ]
+    },
+    {
+        "id": "184fcf68dcd4589a",
+        "type": "debug",
+        "z": "6bf3ba72470dc9d7",
+        "name": "debug 4",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 860,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "e549191af09dc00f",
+        "type": "change",
+        "z": "6bf3ba72470dc9d7",
+        "name": "get_Min_Threshold_value",
+        "rules": [
+            {
+                "t": "set",
+                "p": "fields.powerr_pass_threshold",
+                "pt": "msg",
+                "to": "value",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "fields",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 350,
+        "y": 520,
+        "wires": [
+            [
+                "184fcf68dcd4589a",
+                "f38b251dcfd7799c"
+            ]
+        ]
+    },
+    {
+        "id": "5ac6f38eeafec3a4",
+        "type": "comment",
+        "z": "6bf3ba72470dc9d7",
+        "name": "write to influxdb",
+        "info": "",
+        "x": 100,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "f38b251dcfd7799c",
+        "type": "influxdb out",
+        "z": "6bf3ba72470dc9d7",
+        "influxdb": "2c29904697c66a44",
+        "name": "",
+        "measurement": "Alarms_table",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "tec forge",
+        "bucket": "power",
+        "x": 920,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "24dddd4c54d23b71",
+        "type": "mqtt in",
+        "z": "f6f2187d.f17ca8",
+        "name": "power",
+        "topic": "power",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "e389ad1e7366b28c",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 70,
+        "y": 240,
+        "wires": [
+            [
+                "3b60a7a37dc46481",
+                "b86a1ae24902efc0"
+            ]
+        ]
+    },
+    {
+        "id": "3b60a7a37dc46481",
+        "type": "change",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "value",
+                "pt": "msg",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 240,
+        "y": 240,
+        "wires": [
+            [
+                "0b9ed9206292539d",
+                "b6c339e1d0521b9b",
+                "7d7d1fb0f0415a6a"
+            ]
+        ]
+    },
+    {
+        "id": "b86a1ae24902efc0",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "name": "debug_new_val",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 240,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "b6c339e1d0521b9b",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "name": "Query_Max_Threshold",
+        "func": "msg.query=`from(bucket: \"power\")\n  |> range(start: -1d)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"Threshold_table\")\n  |> filter(fn: (r) => r[\"_field\"] == \"Max\")`;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 80,
+        "wires": [
+            [
+                "4ba4efb48e0ed81a"
+            ]
+        ]
+    },
+    {
+        "id": "0b9ed9206292539d",
+        "type": "change",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "tags.location",
+                "pt": "msg",
+                "to": "Agadir",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "fields.power",
+                "pt": "msg",
+                "to": "value",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "$append(fields,tags)",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 440,
+        "y": 500,
+        "wires": [
+            [
+                "9b1c8de085058b38",
+                "83fed5a03bdd3069"
+            ]
+        ]
+    },
+    {
+        "id": "9b1c8de085058b38",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "name": "debug_power_fin",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "{\t    \"my msg\": \"SAVED TO 'power' TABLE ==> OK\"\t}",
+        "targetType": "jsonata",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 710,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "c24fb90e7bfe5960",
+        "type": "change",
+        "z": "f6f2187d.f17ca8",
+        "name": "get_Max_Threshold_value",
+        "rules": [
+            {
+                "t": "set",
+                "p": "max_threshold_val",
+                "pt": "msg",
+                "to": "payload[0]._value",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 920,
+        "y": 80,
+        "wires": [
+            [
+                "4a20480a926481ea",
+                "7d7d1fb0f0415a6a"
+            ]
+        ]
+    },
+    {
+        "id": "7d7d1fb0f0415a6a",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "name": "function compare",
+        "func": "if (msg.value >= msg.max_threshold_val){\nreturn msg;\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 770,
+        "y": 240,
+        "wires": [
+            [
+                "9cf792d05de6f12c"
+            ]
+        ]
+    },
+    {
+        "id": "9cf792d05de6f12c",
+        "type": "change",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "fields.power_pass_threshold",
+                "pt": "msg",
+                "to": "value",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "fields",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 800,
+        "y": 320,
+        "wires": [
+            [
+                "a157cac07e6929d3",
+                "528070305a58212f"
+            ]
+        ]
+    },
+    {
+        "id": "4a20480a926481ea",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "name": "debug-get-Threshold-Max",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "max_threshold_val",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1210,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "528070305a58212f",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "name": "debug_threshold_fin",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "{\t    \"my msg\": \"SAVED TO 'Threshold_table' TABLE ==> OK\",\t    \"fin\": \" ==> OK\"\t}",
+        "targetType": "jsonata",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1120,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "7171da4711c439e0",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "name": "debug_all_msg_info",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1240,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "4ba4efb48e0ed81a",
+        "type": "influxdb in",
+        "z": "f6f2187d.f17ca8",
+        "influxdb": "2c29904697c66a44",
+        "name": "read",
+        "query": "",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "tec forge",
+        "x": 630,
+        "y": 80,
+        "wires": [
+            [
+                "c24fb90e7bfe5960"
+            ]
+        ]
+    },
+    {
+        "id": "83fed5a03bdd3069",
+        "type": "influxdb out",
+        "z": "f6f2187d.f17ca8",
+        "influxdb": "2c29904697c66a44",
+        "name": "",
+        "measurement": "power",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "tec forge",
+        "bucket": "power",
+        "x": 720,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "a157cac07e6929d3",
+        "type": "influxdb out",
+        "z": "f6f2187d.f17ca8",
+        "influxdb": "2c29904697c66a44",
+        "name": "",
+        "measurement": "Alarms_table",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "tec forge",
+        "bucket": "power",
+        "x": 1140,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "bdd853528ea10251",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "name": "debug_all_msg_infos",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1240,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "e39a5836fa7447dc",
+        "type": "comment",
+        "z": "f6f2187d.f17ca8",
+        "name": "Get data using MQTT",
+        "info": "",
+        "x": 120,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "cf593ac56963750e",
+        "type": "comment",
+        "z": "f6f2187d.f17ca8",
+        "name": "Get Threshold \"Max\" value",
+        "info": "Get Threshold \"Max\" value from \"Threshold_table\" measurement",
+        "x": 410,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "0a3181a73bbce364",
+        "type": "comment",
+        "z": "f6f2187d.f17ca8",
+        "name": "write to \"power\" table",
+        "info": "",
+        "x": 720,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "122510dc14b4797b",
+        "type": "comment",
+        "z": "f6f2187d.f17ca8",
+        "name": "write to \"Alarmes_table\" table",
+        "info": "",
+        "x": 1140,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "31b3089abf078f8b",
+        "type": "prometheus-exporter",
+        "z": "cbd00f9f469eafaf",
+        "name": "",
+        "metric": "c2058fcbe02c16a6",
+        "x": 160,
+        "y": 80,
+        "wires": []
+    }
+]

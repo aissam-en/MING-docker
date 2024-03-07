@@ -1,0 +1,28 @@
+[
+    {
+        "id": "cbd00f9f469eafaf",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "31b3089abf078f8b",
+        "type": "prometheus-exporter",
+        "z": "cbd00f9f469eafaf",
+        "name": "",
+        "metric": "c2058fcbe02c16a6",
+        "x": 160,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "c2058fcbe02c16a6",
+        "type": "prometheus-metric-config",
+        "name": "",
+        "help": "",
+        "labels": "",
+        "mtype": "counter"
+    }
+]
