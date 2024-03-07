@@ -63,7 +63,7 @@ services:
       - GF_INSTALL_PLUGINS=
     volumes:
       - 'grafana_data:/var/lib/grafana'
-      - './Grafana-files/Dashboards-json:/etc/grafana/provisioning/dashboards' # in Dashboards-json folder, there are all dashboards I create in my laptop
+      - './Grafana-files/db/grafana.db:/var/lib/grafana/grafana.db' # grafana.db is a sqlite db, that contains all informations about my old Grafana (that was in Docker Desktop) (dashboard, data sources settings)
 
     restart: unless-stopped
     networks:
