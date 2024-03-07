@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+
+  emqx_test:
+    image: emqx/emqx:latest
+    container_name: emqx_test
+    ports:
+      - 1883:1883  # MQTT port
+      - 8081:8081
+      - 8083:8083
+      - 8084:8084
+      - 8883:8883
+      - 18083:18083  # Dashboard port
+    restart: unless-stopped
+    networks:
+      - test_network
+
+  mqtt_clients_multi_ps:
+    build: .
+    image: mqtt_clients_img
+    container_name: mqtt_clients_multi_ps
+    command: ["python", "app.py"]
+    environment:
+      - MQTT_BROKER_URL=emqx_test
+      - MQTT_PUBLISH_TOPIC=power
+      - NUM_CLIENTS=5
+    depends_on:
+      - emqx_test
+    restart: unless-stopped
+    networks:
+      - test_network
+
+networks:
+  test_network:
+    driver: bridge
