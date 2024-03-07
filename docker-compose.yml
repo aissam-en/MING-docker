@@ -1,0 +1,159 @@
+version: '3'
+
+services:
+
+  # To generate fake mqtt client (multi-clients) with send fake data to MQTT broker, using python
+#  mqtt_clients:
+#    image: mqtt_clients_multiprocessing_img
+#    container_name: mqtt_clients
+#    command: ["python", "app.py"]
+#    environment:
+#      - MQTT_BROKER_URL=emqx
+#      - MQTT_PUBLISH_TOPIC=power
+#      - NUM_CLIENTS=5
+#    depends_on:
+#      - emqx
+#    restart: unless-stopped
+#    networks:
+#      - ming_network
+
+  emqx:
+    image: emqx/emqx:latest
+    container_name: emqx
+    ports:
+      - "1883:1883"  # MQTT port
+      - "8081:8081"
+      - "8083:8083"
+      - "8084:8084"
+      - "8883:8883"
+      - "18083:18083"  # Dashboard port
+    volumes:
+      - './emqx_data:/opt/emqx/data'
+      - './emqx_log:/opt/emqx/log'
+    restart: unless-stopped
+    networks:
+      - ming_network
+
+  influxdb:
+    image: influxdb:latest
+    container_name: influxdb
+    ports:
+      - "8086:8086"
+    volumes:
+      - 'influxdb_data:/var/lib/influxdb'
+      - 'influxdb2_data:/var/lib/influxdb2'
+      - 'influxdb2_config:/etc/influxdb2'
+    restart: unless-stopped
+    networks:
+      - ming_network
+
+
+
+
+      
+      
+  grafana:
+    image: grafana/grafana-enterprise
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - influxdb
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_INSTALL_PLUGINS=
+    volumes:
+      - 'grafana_data:/var/lib/grafana'
+    restart: unless-stopped
+    networks:
+      - ming_network
+
+  nodered:
+    image: nodered/node-red:latest
+    container_name: nodered
+    ports:
+      - "1880:1880"
+    restart: unless-stopped
+    networks:
+      - ming_network
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - "9090:9090"
+    volumes:
+      - 'prometheus_data:/prometheus'
+      - './prometheus.yml:/etc/prometheus/prometheus.yml:ro'
+    restart: unless-stopped
+    networks:
+      - ming_network
+
+  # To monitor the host (metrics: CPU, RAM, Storage, ...)
+  node_exporter:
+    image: quay.io/prometheus/node-exporter:latest
+    container_name: node_exporter
+    ports:
+    - "9100:9100"
+    command:
+      - '--path.rootfs=/host'
+    volumes:
+      - '/:/host:ro,rslave'
+    restart: unless-stopped
+    networks:
+      - ming_network
+
+  postgres:
+    image: postgres
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - './data:/var/lib/postgresql/data'
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    restart: unless-stopped
+    networks:
+      - ming_network
+  pgadmin4:
+    image: dpage/pgadmin4
+    container_name: pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@gmail.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+      - PGADMIN_LISTEN_PORT=5050
+    ports:
+      - "5050:5050"
+    restart: unless-stopped
+    networks:
+      - ming_network
+  # To monitor postgres server
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter
+    container_name: postgres-exporter
+    ports:
+      - "9187:9187"
+    environment:
+      # explaining postgresql://postgres:postgres@postgres:5432/threshold_db?sslmode=disable
+      #   1st "postgres" is my username, 
+      #   2nd "postgres" is my password, 
+      #   3rd "postgres" is hostname=IP_address=DNSname of postgres server (container), 
+      #   "threshold_db" is the name of our database to connect to.
+      DATA_SOURCE_NAME: "postgresql://postgres:postgres@postgres:5432/threshold_db?sslmode=disable"
+    restart: unless-stopped
+    networks:
+      - ming_network
+
+networks:
+  ming_network:
+    driver: bridge
+
+volumes: 
+  influxdb_data:
+  influxdb2_data:
+  grafana_data:
+  prometheus_data:
