@@ -3,19 +3,19 @@ version: '3'
 services:
 
   # To generate fake mqtt client (multi-clients) with send fake data to MQTT broker, using python
-#  mqtt_clients:
-#    image: mqtt_clients_img
-#    container_name: mqtt_clients
-#    command: ["python", "app.py"]
-#    environment:
-#      - MQTT_BROKER_URL=emqx
-#      - MQTT_PUBLISH_TOPIC=power
-#      - NUM_CLIENTS=5
-#    depends_on:
-#      - emqx
-#    restart: unless-stopped
-#    networks:
-#      - ming_network
+  mqtt_clients:
+    image: mqtt_clients_img
+    container_name: mqtt_clients
+    command: ["python", "app.py"]
+    environment:
+      - MQTT_BROKER_URL=emqx
+      - MQTT_PUBLISH_TOPIC=power
+      - NUM_CLIENTS=5
+    depends_on:
+      - emqx
+    restart: unless-stopped
+    networks:
+      - ming_network
 
 
   emqx:
