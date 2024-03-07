@@ -63,6 +63,8 @@ services:
       - GF_INSTALL_PLUGINS=
     volumes:
       - 'grafana_data:/var/lib/grafana'
+      - './Grafana-files/Dashboards-json:/etc/grafana/provisioning/dashboards' # in Dashboards-json folder, there are all dashboards I create in my laptop
+
     restart: unless-stopped
     networks:
       - ming_network
@@ -75,6 +77,7 @@ services:
       - "1880:1880"
     volumes:
       - 'node_red_data:/data'
+      - './Node-Red-files/All-flows-in-1-json/flows.json:/data/flows.json' # this flows.json contains all flows I create in my laptop
     restart: unless-stopped
     networks:
       - ming_network
