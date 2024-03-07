@@ -1,0 +1,58 @@
+global:
+  scrape_interval: 5s
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['prometheus:9090']
+
+  - job_name: 'node_exporter'
+    static_configs:
+      - targets: ['node_exporter:9100']
+
+  - job_name: 'emqx_stats'
+    static_configs:
+      - targets: ['emqx:18083']
+    metrics_path: '/api/v5/prometheus/stats'
+    scheme: 'http'
+    basic_auth:
+      username: ''
+      password: ''
+
+  - job_name: 'emqx_auth'
+    static_configs:
+      - targets: ['emqx:18083']
+    metrics_path: '/api/v5/prometheus/auth'
+    scheme: 'http'
+    basic_auth:
+      username: ''
+      password: ''
+
+  - job_name: 'emqx_data_integration'
+    static_configs:
+      - targets: ['emqx:18083']
+    metrics_path: '/api/v5/prometheus/data_integration'
+    scheme: 'http'
+    basic_auth:
+      username: ''
+      password: ''
+
+  - job_name: 'influxdb'
+    static_configs:
+      - targets: ['influxdb:8086']
+
+  - job_name: 'nodered'
+    static_configs:
+      - targets: ['nodered:1880']
+
+  - job_name: 'grafana'
+    static_configs:
+      - targets: ['grafana:3000']
+
+  - job_name: 'postgres-exporter'
+    static_configs:
+      - targets: ['postgres-exporter:9187']
+
+#  - job_name: docker
+#    static_configs:
+#      - targets: ["host.docker.internal:9323"]
