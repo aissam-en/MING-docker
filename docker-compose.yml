@@ -17,6 +17,7 @@ services:
 #    networks:
 #      - ming_network
 
+
   emqx:
     image: emqx/emqx:latest
     container_name: emqx
@@ -28,11 +29,12 @@ services:
       - "8883:8883"
       - "18083:18083"  # Dashboard port
     volumes:
-      - './emqx_data:/opt/emqx/data'
-      - './emqx_log:/opt/emqx/log'
+      - 'emqx_data:/opt/emqx/data'
+      - 'emqx_log:/opt/emqx/log'
     restart: unless-stopped
     networks:
       - ming_network
+
 
   influxdb:
     image: influxdb:latest
@@ -48,10 +50,6 @@ services:
       - ming_network
 
 
-
-
-      
-      
   grafana:
     image: grafana/grafana-enterprise
     container_name: grafana
@@ -69,14 +67,18 @@ services:
     networks:
       - ming_network
 
+
   nodered:
     image: nodered/node-red:latest
     container_name: nodered
     ports:
       - "1880:1880"
+    volumes:
+      - 'node_red_data:/data'
     restart: unless-stopped
     networks:
       - ming_network
+
 
   prometheus:
     image: prom/prometheus:latest
@@ -87,10 +89,11 @@ services:
       - "9090:9090"
     volumes:
       - 'prometheus_data:/prometheus'
-      - './prometheus.yml:/etc/prometheus/prometheus.yml:ro'
+      - './Prometheus-files/prometheus.yml:/etc/prometheus/prometheus.yml:ro'
     restart: unless-stopped
     networks:
       - ming_network
+
 
   # To monitor the host (metrics: CPU, RAM, Storage, ...)
   node_exporter:
@@ -106,13 +109,14 @@ services:
     networks:
       - ming_network
 
+
   postgres:
     image: postgres
     container_name: postgres
     ports:
       - "5432:5432"
     volumes:
-      - './data:/var/lib/postgresql/data'
+      - 'postgres_data:/var/lib/postgresql/data'
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
@@ -131,6 +135,8 @@ services:
     restart: unless-stopped
     networks:
       - ming_network
+
+
   # To monitor postgres server
   postgres-exporter:
     image: prometheuscommunity/postgres-exporter
@@ -138,7 +144,7 @@ services:
     ports:
       - "9187:9187"
     environment:
-      # explaining postgresql://postgres:postgres@postgres:5432/threshold_db?sslmode=disable
+      # explaining postgresql://postgres:postgres@postgres:5432/threshold_db?sslmode=disable :
       #   1st "postgres" is my username, 
       #   2nd "postgres" is my password, 
       #   3rd "postgres" is hostname=IP_address=DNSname of postgres server (container), 
@@ -153,7 +159,12 @@ networks:
     driver: bridge
 
 volumes: 
+  emqx_data:
+  emqx_log:
   influxdb_data:
   influxdb2_data:
+  influxdb2_config:
+  node_red_data:
   grafana_data:
   prometheus_data:
+  postgres_data:
