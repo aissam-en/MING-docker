@@ -7,5 +7,4 @@ run this command in `./build mqtt_clients_img` folder :
 docker-compose up
 ```
 
-Note: to build and run mqtt_clients_img separatly, see [build mqtt_clients_img](build%20mqtt_clients_img/Readme.md)
-
+Note: to build and run mqtt_clients_img separatly, see [build mqtt_clients_img](build%20mqtt_clients_img/README.md)
