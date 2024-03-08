@@ -1,12 +1,12 @@
 version: '3'
 
 # Dashboards : 
-#    emqx       ==> .....:18083
-#    influxdb   ==> .....:8086
-#    grafana    ==> .....:3000
+#    emqx       ==> .....:18083          default is admin:public
+#    influxdb   ==> .....:8086           default is admin:adminadmin
+#    grafana    ==> .....:3000           default is admin:admin
 #    nodered    ==> .....:1880
 #    prometheus ==> .....:9090
-#    pgadmin4   ==> .....:5050
+#    pgadmin4   ==> .....:5050           default is admin@gmail.com:admin
 #        node_exporter     ==> .....:9100
 #        postgres-exporter ==> .....:9187
 
