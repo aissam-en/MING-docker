@@ -1,10 +1,21 @@
 version: '3'
 
+# Dashboards : 
+#    emqx       ==> .....:18083
+#    influxdb   ==> .....:8086
+#    grafana    ==> .....:3000
+#    nodered    ==> .....:1880
+#    prometheus ==> .....:9090
+#    pgadmin4   ==> .....:5050
+#        node_exporter     ==> .....:9100
+#        postgres-exporter ==> .....:9187
+
 services:
 
   # To generate fake mqtt client (multi-clients) with send fake data to MQTT broker, using python
   mqtt_clients:
-    image: mqtt_clients_img
+    image: mqtt_clients_img # if you build it from Dockerfile
+#    image: aissamen/mqtt_clients_img # if you Pulled the image from docker hub
     container_name: mqtt_clients
     command: ["python", "app.py"]
     environment:
@@ -63,8 +74,7 @@ services:
       - GF_INSTALL_PLUGINS=
     volumes:
       - 'grafana_data:/var/lib/grafana'
-      - './Grafana-files/db/grafana.db:/var/lib/grafana/grafana.db' # grafana.db is a sqlite db, that contains all informations about my old Grafana (that was in Docker Desktop) (dashboard, data sources settings)
-
+#      - './Grafana-files/db/grafana.db:/var/lib/grafana/grafana.db' # didn't works # grafana.db is a sqlite db, that contains all informations about my old Grafana (that was in Docker Desktop) (dashboard, data sources settings)
     restart: unless-stopped
     networks:
       - ming_network
@@ -78,6 +88,7 @@ services:
     volumes:
       - 'node_red_data:/data'
       - './Node-Red-files/All-flows-in-1-json/flows.json:/data/flows.json' # this flows.json contains all flows I create in my laptop
+      - './Node-Red-files\plugins-json\package.json:/data/package.json'  # to install influxdb and prometheus plugins
     restart: unless-stopped
     networks:
       - ming_network
