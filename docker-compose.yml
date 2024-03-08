@@ -14,8 +14,8 @@ services:
 
   # To generate fake mqtt client (multi-clients) with send fake data to MQTT broker, using python
   mqtt_clients:
-    image: mqtt_clients_img # if you build it from Dockerfile
-#    image: aissamen/mqtt_clients_img # if you Pulled the image from docker hub
+#    image: mqtt_clients_img # if you build it from Dockerfile
+    image: aissamen/mqtt_clients_img # if you Pulled the image from docker hub
     container_name: mqtt_clients
     command: ["python", "app.py"]
     environment:
@@ -109,7 +109,7 @@ services:
       - ming_network
 
 
-  # To monitor the host (metrics: CPU, RAM, Storage, ...)
+  # To monitor the host (metrics about: CPU, RAM, Storage, ...)
   node_exporter:
     image: quay.io/prometheus/node-exporter:latest
     container_name: node_exporter
