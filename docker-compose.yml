@@ -88,7 +88,7 @@ services:
     volumes:
       - 'node_red_data:/data'
       - './Node-Red-files/All-flows-in-1-json/flows.json:/data/flows.json' # this flows.json contains all flows I create in my laptop
-      - './Node-Red-files/plugins-json/package.json:/data/package.json'  # to install influxdb and prometheus plugins
+#      - './Node-Red-files/plugins-json/package.json:/data/package.json' # not working, maybe it works only to build image # the package.json file is for installing influxdb and prometheus plugins on Node Red
     restart: unless-stopped
     networks:
       - ming_network

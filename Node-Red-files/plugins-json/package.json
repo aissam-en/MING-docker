@@ -3,6 +3,9 @@
     "description": "A Node-RED Project",
     "version": "0.0.1",
     "private": true,
+    "scripts": {
+        "start": "node $NODE_OPTIONS node_modules/node-red/red.js $FLOWS"
+    },
     "dependencies": {
         "node-red-contrib-influxdb": "~0.7.0",
         "node-red-contrib-prometheus-exporter": "~1.0.5"
