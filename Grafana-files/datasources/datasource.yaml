@@ -9,23 +9,25 @@ datasources:
     type: influxdb
     access: proxy
     url: http://localhost:8086
+    isDefault: true
     jsonData:
       version: Flux
-      organization: organization
-      defaultBucket: bucket
+      organization: 'tec forge' ####### put it in .env file
+      defaultBucket: power ####### put it in .env file
       tlsSkipVerify: true
-    secureJsonData:
-      token: token
+    # secureJsonData:
+    #   token: token # How to get token from influxdb to this datasource.yml (.env file) ? or using the UI (hard writing - copy past)
+
 
   # Postgres example:
   - name: Postgres
     type: postgres
-    url: localhost:5432
-    user: grafana
+    url: postgres:5432
+    user: postgres
     secureJsonData:
-      password: 'Password!'
+      password: 'postgres' ####### put it in .env file
     jsonData:
-      database: grafana
+      database: 'threshold_db' ####### put it in .env file
       sslmode: 'disable' # disable/require/verify-ca/verify-full
       maxOpenConns: 100 # Grafana v5.4+
       maxIdleConns: 100 # Grafana v5.4+
@@ -40,22 +42,24 @@ datasources:
     type: prometheus
     access: proxy
     # Access mode - proxy (server in the UI) or direct (browser in the UI).
-    url: http://localhost:9090
+    url: http://prometheus:9090
     jsonData:
       httpMethod: POST
       manageAlerts: true
       prometheusType: Prometheus
-      prometheusVersion: 2.44.0
-      cacheLevel: 'High'
+      # prometheusVersion: 2.44.0
+      prometheusVersion: 2.49.1
+      # cacheLevel: 'High'
+      cacheLevel: 'Low'
       disableRecordingRules: false
       incrementalQueryOverlapWindow: 10m
-      exemplarTraceIdDestinations:
-        # Field with internal link pointing to data source in Grafana.
-        # datasourceUid value can be anything, but it should be unique across all defined data source uids.
-        - datasourceUid: my_jaeger_uid
-          name: traceID
+      # exemplarTraceIdDestinations:
+      #   # Field with internal link pointing to data source in Grafana.
+      #   # datasourceUid value can be anything, but it should be unique across all defined data source uids.
+      #   - datasourceUid: my_jaeger_uid
+      #     name: traceID
 
-        # Field with external link.
-        - name: traceID
-          url: 'http://localhost:3000/explore?orgId=1&left=%5B%22now-1h%22,%22now%22,%22Jaeger%22,%7B%22query%22:%22$${__value.raw}%22%7D%5D'
+      #   # Field with external link.
+      #   - name: traceID
+      #     url: 'http://localhost:3000/explore?orgId=1&left=%5B%22now-1h%22,%22now%22,%22Jaeger%22,%7B%22query%22:%22$${__value.raw}%22%7D%5D'
 
