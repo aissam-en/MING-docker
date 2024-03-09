@@ -75,7 +75,7 @@ services:
     volumes:
       - 'grafana_data:/var/lib/grafana'
 #      - './Grafana-files/db/grafana.db:/var/lib/grafana/grafana.db' # didn't works # grafana.db is a sqlite db, that contains all informations about my old Grafana (that was in Docker Desktop) (dashboard, data sources settings)
-      - './Grafana-files/datasources:/etc/grafana/provisioning/datasources' # ./Grafana-files/datasources/datasource.yaml is for Datasources Provision
+      - './Grafana-files/datasources:/etc/grafana/provisioning/datasources' # it Works # ./Grafana-files/datasources/datasource.yaml is for Datasources Provision
     restart: unless-stopped
     networks:
       - ming_network
@@ -147,6 +147,8 @@ services:
       - PGADMIN_LISTEN_PORT=5050
     ports:
       - "5050:5050"
+    # volumes:
+    #   - pgadmin_data:/var/lib/pgadmin
     restart: unless-stopped
     networks:
       - ming_network
@@ -183,3 +185,4 @@ volumes:
   grafana_data:
   prometheus_data:
   postgres_data:
+  # pgadmin_data:
