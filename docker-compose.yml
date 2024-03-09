@@ -75,6 +75,7 @@ services:
     volumes:
       - 'grafana_data:/var/lib/grafana'
 #      - './Grafana-files/db/grafana.db:/var/lib/grafana/grafana.db' # didn't works # grafana.db is a sqlite db, that contains all informations about my old Grafana (that was in Docker Desktop) (dashboard, data sources settings)
+      - './Grafana-files/datasources:/etc/grafana/provisioning/datasources' # ./Grafana-files/datasources/datasource.yaml is for Datasources Provision
     restart: unless-stopped
     networks:
       - ming_network
