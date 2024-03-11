@@ -68,10 +68,17 @@ services:
       - "3000:3000"
     depends_on:
       - influxdb
+      - postgres
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
-      - GF_INSTALL_PLUGINS=
+      - GF_DATABASE_TYPE=postgres
+      - GF_DATABASE_HOST=postgres:5432
+      - GF_DATABASE_NAME=grafana_db # the grafana_db database should exist already
+      - GF_DATABASE_USER=postgres
+      - GF_DATABASE_PASSWORD=postgres
+    #  - GF_DATABASE_URL=postgresql://postgres:postgres@postgres:5432/grafana_db
+      - GF_DATABASE_SSL_MODE=disable
     volumes:
       - 'grafana_data:/var/lib/grafana'
 #      - './Grafana-files/db/grafana.db:/var/lib/grafana/grafana.db' # didn't works # grafana.db is a sqlite db, that contains all informations about my old Grafana (that was in Docker Desktop) (dashboard, data sources settings)
@@ -135,6 +142,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=grafana_db # grafana_db is the database where grafana store dashboards, users, ... infos
     restart: unless-stopped
     networks:
       - ming_network

@@ -16,7 +16,7 @@ datasources:
       defaultBucket: power ####### put it in .env file
       tlsSkipVerify: true
     # secureJsonData:
-    #   token: token # How to get token from influxdb to this datasource.yml (.env file) ? or using the UI (hard writing - copy past)
+    #   token: token # token from influxdb to this datasource.yml (.env file) ||| or using the UI (hard writing - copy past)
 
 
   # Postgres example:
